@@ -98,7 +98,11 @@ fastify.get('/api/fetchMessages', api.fetchMessages)
 fastify.get('/api/fetchTranslations', api.fetchTranslations)
 
 const buildPath = path.resolve(__dirname, '..', 'build')
-fs.existsSync(buildPath) && fastify.register(fastifyStatic, { root: buildPath })
+const indexFilePath = path.join(buildPath, 'index.html')
+fs.existsSync(buildPath) && fastify.register(fastifyStatic, {
+  root: buildPath,
+  page404Path: indexFilePath
+})
 
 fastify.listen(process.env.PORT || 3000, function (err) {
   if (err) throw err
