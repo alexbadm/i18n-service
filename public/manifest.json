@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "i18n-service",
+  "name": "i18n-service",
   "icons": [
     {
       "src": "favicon.ico",

@@ -9,7 +9,7 @@ services:
     command: npm run server
     env_file: .env.local
     environment:
-      NODE_ENV: production # [ development | production ]
+      NODE_ENV: production
       PGUSER: postgres
       PGHOST: db
       PGPASSWORD: postgres
@@ -17,7 +17,7 @@ services:
       PGPORT: 5432
     ports:
       - 3000:3000
-    links:
+    depends_on:
       - db
 
   db:
@@ -34,9 +34,10 @@ services:
       - ./:/usr/src/app
     working_dir: /usr/src/app
     command: /bin/true
-    command: npm run start # uncomment this line to start the development server
+    # command: npm run build # uncomment this line to use this container for the build
+    # command: npm run start # uncomment this line to start the development server on the own port
     env_file: .env.local
     environment: 
-      NODE_ENV: development # [ development | production ]
+      NODE_ENV: development
     ports:
       - 3001:3000
