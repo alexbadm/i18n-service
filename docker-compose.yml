@@ -1,49 +1,42 @@
 version: "3"
 services:
 
-  api:
+  server:
     image: node:latest
     volumes:
-      - "${HOME}/.ssh/id_rsa:/root/.ssh/id_rsa:ro"
       - ./:/usr/src/app
     working_dir: /usr/src/app
     command: npm run server
     env_file: .env.local
     environment:
-      BROWSER: none
-      NODE_ENV: development # [ development | production ]
+      NODE_ENV: production # [ development | production ]
       PGUSER: postgres
       PGHOST: db
       PGPASSWORD: postgres
       PGDATABASE: intl
       PGPORT: 5432
-      PORT: 3000
     ports:
-      - 3004:3000
+      - 3000:3000
+    links:
+      - db
 
   db:
     image: "postgres:9.6"
     volumes:
-      - "./psql/:/docker-entrypoint-initdb.d/"
-      - psql-data:/var/lib/postgresql/data
+      - ./psql/:/docker-entrypoint-initdb.d/
+      - ./dbdata:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: postgres
 
-  webapp:
+  dev-server:
     image: node:latest
     volumes:
-      - "${HOME}/.ssh/id_rsa:/root/.ssh/id_rsa:ro"
       - ./:/usr/src/app
     working_dir: /usr/src/app
-    command: npm run start
+    command: /bin/true
+    command: npm run start # uncomment this line to start the development server
     env_file: .env.local
     environment: 
-      BROWSER: none
       NODE_ENV: development # [ development | production ]
-      PORT: 3000
     ports:
-      - 3003:3000
-
-volumes:
-  psql-data:
-    driver: local
+      - 3001:3000
