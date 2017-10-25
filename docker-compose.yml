@@ -1,0 +1,53 @@
+version: "3"
+services:
+
+  api:
+    image: node:latest
+    volumes:
+      - "${HOME}/.ssh/id_rsa:/root/.ssh/id_rsa:ro"
+      - ./:/usr/src/app
+    working_dir: /usr/src/app
+    command: npm run server
+    environment:
+      ALLOW_ORIGIN: http://192.168.4.4:3003
+      BROWSER: none
+      LANGUAGES: en de ru
+      NODE_ENV: development # [ development | production ]
+      PGUSER: postgres
+      PGHOST: db
+      PGPASSWORD: postgres
+      PGDATABASE: intl
+      PGPORT: 5432
+      PORT: 3000
+      TZ: Europe/Moscow
+    ports:
+      - 3004:3000
+
+  db:
+    image: "postgres:9.6"
+    volumes:
+      - "./psql/:/docker-entrypoint-initdb.d/"
+      - psql-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgres
+
+  webapp:
+    image: node:latest
+    volumes:
+      - "${HOME}/.ssh/id_rsa:/root/.ssh/id_rsa:ro"
+      - ./:/usr/src/app
+    working_dir: /usr/src/app
+    command: npm run start
+    environment: 
+      BROWSER: none
+      LANGUAGES: en de ru
+      NODE_ENV: development # [ development | production ]
+      PORT: 3000
+      REACT_APP_API_URL: http://192.168.4.4:3004
+      TZ: Europe/Moscow
+    ports:
+      - 3003:3000
+
+volumes:
+  psql-data:
+    driver: local
