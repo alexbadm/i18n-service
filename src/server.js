@@ -1,25 +1,22 @@
-const fastify = require('fastify')()
+const fs = require('fs')
+const path = require('path')
 const { Client } = require('pg')
+const fastify = require('fastify')()
+const fastifyStatic = require('fastify-static')
+fastify.use(require('cors')())
+
 const client = new Client()
 const origin = process.env.ALLOW_ORIGIN
 const languages = process.env.LANGUAGES.split(' ')
 
-fastify.use(require('cors')())
-
-async function dbConnect () {
-  try {
-    await client.connect()
-    return true
-  } catch (e) {
-    console.log('db connection error:', e.message)
-    return false
-  }
-}
+client.connect().catch(e => {
+  console.log('unable to start server:', e.message)
+  process.exit(1)
+})
 
 const api = {}
 
 api.addModule = async (request, reply) => {
-  console.log('request body', request.body)
   try {
     const { rows } = await client.query('INSERT INTO module_names (name) VALUES ($1) RETURNING *', [request.body.moduleName])
     reply.type('application/json').code(200)
@@ -59,6 +56,10 @@ api.loadAllDictionaries = async (request, reply) => {
   })
 
   translations.rows.forEach(transl => {
+    if (!result[transl.modulename][transl.lang.trim()]) {
+      console.log(`[loadAllDictionaries error] database rows has unknown language: "${transl.lang.trim()}". Actual languages: [${languages.join(', ')}]. Skipped some data during the filling of the response`)
+      return
+    }
     result[transl.modulename][transl.lang.trim()][transl.message_id] = transl.value
   })
 
@@ -82,38 +83,24 @@ api.fetchTranslations = async (request, reply) => {
   return { hello: 'fetchTranslations' }
 }
 
-// const opts = {
-//   schema: {
-//     response: {
-//       200: {
-//         type: 'object',
-//         properties: {
-//           hello: { type: 'string' }
-//         }
-//       }
-//     }
-//   }
-// }
-
-// fastify.get('/', opts, async (request, reply) => {
-//   // reply.type('application/json').code(200)
-//   return { hello: 'world' }
-// })
-
-fastify.post('/addModule', api.addModule)
-fastify.post('/addWord', api.addWord)
-fastify.get('/loadAllDictionaries', api.loadAllDictionaries)
-fastify.get('/loadDictionary', api.loadDictionary)
-fastify.get('/fetchMessages', api.fetchMessages)
-fastify.get('/fetchTranslations', api.fetchTranslations)
+fastify.post('/api/addModule', api.addModule)
+fastify.post('/api/addWord', api.addWord)
 
 fastify.post('/', async (request, reply) => {
-  console.log('unknown request', request)
+  console.log('unknown request:\nheaders', request.headers, '\nbody: ', request.body)
   reply.type('application/json').code(200)
   return request.body
 })
 
-dbConnect() && fastify.listen(3000, function (err) {
+fastify.get('/api/loadAllDictionaries', api.loadAllDictionaries)
+fastify.get('/api/loadDictionary', api.loadDictionary)
+fastify.get('/api/fetchMessages', api.fetchMessages)
+fastify.get('/api/fetchTranslations', api.fetchTranslations)
+
+const buildPath = path.resolve(__dirname, '..', 'build')
+fs.existsSync(buildPath) && fastify.register(fastifyStatic, { root: buildPath })
+
+fastify.listen(process.env.PORT || 3000, function (err) {
   if (err) throw err
   console.log(`server listening on ${fastify.server.address().port}`)
 })

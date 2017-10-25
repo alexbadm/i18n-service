@@ -21,6 +21,9 @@ function * loadAllDictionaries (ea) {
   try {
     const response = yield call([ea.api, 'loadAllDictionaries'])
     const data = yield response.json()
+    if (!response.ok) {
+      throw new Error(`failed to load all dictionaries: [${response.status} ${response.statusText}] ${data.message}`)
+    }
     yield put({ type: LOAD_ALL_DICTIONARIES_SUCCESS, payload: data })
   } catch (e) {
     yield put({ type: LOAD_ALL_DICTIONARIES_FAILURE, message: e.message })

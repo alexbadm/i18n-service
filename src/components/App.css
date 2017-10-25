@@ -44,6 +44,11 @@ input.TextInput.large {
   padding: 0 16px;
 }
 
+input.TextInput::placeholder {
+  font-weight: 100;
+  color: #aaa;
+}
+
 .Content {
   margin-left: 240px;
 }
@@ -70,10 +75,14 @@ header .switcher {
 
 header .switcher > span {
   cursor: pointer;
+  display: inline-block;
+  line-height: 20px;
+  min-width: 20px;
+  text-align: center;
   padding: 0 10px;
 }
 
-header span.active {
+header .switcher > span.active {
   background-color: #ff6647;
   color: white;
   cursor: default;

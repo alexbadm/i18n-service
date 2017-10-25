@@ -14,7 +14,7 @@ const apiInterface = {
 const api = Object.create(apiInterface)
 
 api.addModule = function (payload) {
-  return window.fetch(this.url + '/addModule', {
+  return window.fetch(this.url + '/api/addModule', {
     body: JSON.stringify(payload),
     headers: {
       'Accept': 'application/json',
@@ -31,7 +31,7 @@ api.addWord = async (request, reply) => {
 }
 
 api.loadAllDictionaries = function () {
-  return window.fetch(this.url + '/loadAllDictionaries')
+  return window.fetch(this.url + '/api/loadAllDictionaries')
 }
 
 api.loadDictionary = async (request, reply) => {
