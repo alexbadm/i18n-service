@@ -1,12 +1,42 @@
-
-
 .Dictionary .moduleName {
   color: #ff6647;
+}
+
+.Dictionary .searchLine {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Dictionary .searchLine > div {
+  position: relative;
+}
+
+.Dictionary .searchLine input {
+  border: 1px solid gainsboro;
+  border-radius: 6px;
+  line-height: 18px;
+  outline: none;
+  padding: 3px 10px;
+}
+
+.Dictionary .searchLine svg {
+  color: gainsboro;
+  height: 15px;
+  position: absolute;
+  right: 10px;
+  top: 5px;
+}
+
+.Dictionary input::placeholder {
+  color: #bbb;
 }
 
 .Dictionary table {
   border-collapse: collapse;
   border-spacing: 0;
+  margin-bottom: 14px;
   width: 100%;
 }
 
@@ -16,10 +46,37 @@
   line-height: 22px;
   padding: 4px;
   padding-left: 0;
+  position: relative;
   text-align: left;
   vertical-align: top;
 }
 
+.Dictionary table tr > td:last-child {
+  padding-right: 0;
+}
+
 .Dictionary table th {
   border-bottom: 2px solid darkgrey;
+}
+
+.Dictionary table input {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.Dictionary table td > span {
+  background-color: rgba(255,255,255,0.8);
+  bottom: 4px;
+  box-shadow: -4px 0 8px 1px rgba(255,255,255,0.8);
+  color: #999;
+  cursor: pointer;
+  display: block;
+  font-size: smaller;
+  font-weight: bolder;
+  position: absolute;
+  right: 4px;
+}
+
+.Dictionary button.Button {
+  margin-right: 14px;
 }

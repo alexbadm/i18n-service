@@ -16,7 +16,7 @@ const AddModule = ({ addModule, moduleName, typeModuleName }) => (<div>
     value={moduleName}
   />
   <ModuleUrls moduleName={moduleName} />
-  <button className='Button accent' onClick={addModule}>Добавить</button>
+  <button className='Button accent large' onClick={addModule}>Добавить</button>
 </div>)
 
 const mapStateToProps = state => state.addModule

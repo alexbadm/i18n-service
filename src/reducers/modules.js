@@ -1,4 +1,5 @@
 import {
+  ADD_WORD_OR_REPLACE,
   LOAD_DICTIONARY_REQUEST,
   LOAD_DICTIONARY_SUCCESS,
   LOAD_DICTIONARY_FAILURE,
@@ -16,6 +17,28 @@ const modules = (state, { type, payload }) => {
   }
 
   switch (type) {
+    case ADD_WORD_OR_REPLACE:
+      return {
+        ...state,
+        loading: true,
+        data: {
+          ...state.data,
+          [payload.moduleName]: {
+            ...state.data[payload.moduleName],
+            messages: state.data[payload.moduleName].messages.some(mes => mes.id === payload.message_id)
+              ? state.data[payload.moduleName].messages
+              : state.data[payload.moduleName].messages.concat({
+                id: payload.message_id,
+                key: payload.key
+              }),
+            [payload.lang]: {
+              ...state.data[payload.moduleName][payload.lang],
+              [payload.message_id]: payload.value
+            }
+          }
+        }
+      }
+
     case LOAD_DICTIONARY_REQUEST:
       return {
         ...state,

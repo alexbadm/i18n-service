@@ -3,7 +3,7 @@ const functionNotImplemented = () => { throw new Error('not implemented') }
 
 const apiInterface = {
   addModule: functionNotImplemented,
-  addWord: functionNotImplemented,
+  addWordOrReplace: functionNotImplemented,
   loadAllDictionaries: functionNotImplemented,
   loadDictionary: functionNotImplemented,
   fetchMessages: functionNotImplemented,
@@ -26,8 +26,8 @@ api.addModule = function (payload) {
   })
 }
 
-api.addWord = function (payload) {
-  return window.fetch(this.url + '/api/addWord', {
+api.addWordOrReplace = function (payload) {
+  return window.fetch(this.url + '/api/addWordOrReplace', {
     body: JSON.stringify(payload),
     headers: postHeaders,
     method: 'POST',

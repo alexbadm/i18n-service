@@ -27,10 +27,32 @@ api.addModule = async (request, reply) => {
   }
 }
 
-api.addWord = async (request, reply) => {
-  // INSERT INTO translations (message_id, lang, value) VALUES (1, 'ru', 'Otmena'), (1, 'en', 'Cancel'), (3, 'en', 'Welcome'), (3, 'ru', 'Dobro pozhalovat'), (5, 'en', 'Login'), (4, 'ru', 'Poka!')
+api.addWordOrReplace = async (request, reply) => {
+  // console.log('addWordOrReplace body: ', request.body)
+
+  const { language, moduleName, key, translation } = request.body
+  const moduleIdResult = await client.query('SELECT id FROM module_names WHERE name=$1', [moduleName])
+  const moduleId = moduleIdResult.rows[0].id
+  // console.log('moduleId is ', moduleId)
+
+  const messageIdResult = await client.query(`INSERT INTO messages (module_id, key)
+    VALUES ($1, $2)
+    ON CONFLICT (module_id, key) DO UPDATE
+      SET key = excluded.key
+    RETURNING id`, [moduleId, key])
+  const messageId = messageIdResult.rows[0].id
+  // console.log('messageId is ', messageId)
+
+  const translationResult = await client.query(`INSERT INTO translations (message_id, lang, value)
+    VALUES ($1, $2, $3)
+    ON CONFLICT (message_id, lang) DO UPDATE
+      SET value = excluded.value
+    RETURNING *`, [messageId, language, translation])
+  const result = translationResult.rows[0]
+  // console.log('result ', result)
+
   reply.type('application/json').code(200)
-  return { hello: 'addWord' }
+  return Object.assign({}, result, { lang: result.lang.trim() })
 }
 
 api.loadAllDictionaries = async (request, reply) => {
@@ -52,7 +74,7 @@ api.loadAllDictionaries = async (request, reply) => {
     name: 'fetch-all-translations',
     text: `SELECT message_id, lang, value, name AS modulename FROM translations
       LEFT JOIN messages ON message_id = messages.id
-      LEFT JOIN module_names ON module_id = module_names.id`
+      INNER JOIN module_names ON module_id = module_names.id`
   })
 
   translations.rows.forEach(transl => {
@@ -84,7 +106,7 @@ api.fetchTranslations = async (request, reply) => {
 }
 
 fastify.post('/api/addModule', api.addModule)
-fastify.post('/api/addWord', api.addWord)
+fastify.post('/api/addWordOrReplace', api.addWordOrReplace)
 
 fastify.post('/', async (request, reply) => {
   console.log('unknown request:\nheaders', request.headers, '\nbody: ', request.body)

@@ -9,7 +9,8 @@ DROP TABLE IF EXISTS translations;
 CREATE TABLE messages (
     id serial PRIMARY KEY,
     module_id integer NOT NULL,
-    key VARCHAR(40) NOT NULL
+    key VARCHAR(40) NOT NULL,
+    UNIQUE (module_id, key)
 );
 
 CREATE TABLE module_names (
