@@ -21,10 +21,6 @@ function * addModule (ea) {
   }
 
   try {
-    // const result = yield call([ea.api, 'addModule'], { moduleName })
-    // console.log('result', result)
-    // const newModule = yield result.json()
-    // console.log('newModule', newModule)
     yield call([ea.api, 'addModule'], { moduleName })
     yield put({ type: CLEAR_MODULE_NAME })
     yield put({ type: ADD_MODULE_SUCCESS })

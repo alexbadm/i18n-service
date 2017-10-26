@@ -11,14 +11,7 @@ const modules = (state, { type, payload }) => {
   if (!state) {
     state = {
       loading: false,
-      data: {
-        main: {
-          messages: [],
-          en: {},
-          de: {},
-          ru: {}
-        }
-      }
+      data: {}
     }
   }
 

@@ -5,13 +5,11 @@ import './Dictionary.css'
 import ModuleUrls from './ModuleUrls'
 import { ADD_WORD_REQUEST, SET_WORD } from '../types/dictionary'
 
-const Dictionary = ({ moduleName, onChangeInput, key, save, translation, words }) => {
-  const onInputChange = e => {
-    onChangeInput({
-      [e.target.name]: e.target.value,
-      moduleName
-    })
-  }
+const Dictionary = ({ dictionary, moduleName, onChangeInput, save, words }) => {
+  const onInputChange = e => onChangeInput({
+    [e.target.name]: e.target.value,
+    moduleName
+  })
 
   return (<div className='Dictionary'>
     <h1>Модуль <span className='moduleName'>{moduleName}</span></h1>
@@ -32,8 +30,8 @@ const Dictionary = ({ moduleName, onChangeInput, key, save, translation, words }
       </tbody>
       <tfoot>
         <tr>
-          <td><input type='text' onChange={onInputChange} name='key' value={key} /></td>
-          <td><input type='text' onChange={onInputChange} name='translation' value={translation} /> <span onClick={save}>Сохранить</span></td>
+          <td><input type='text' onChange={onInputChange} name='key' value={dictionary.key} /></td>
+          <td><input type='text' onChange={onInputChange} name='translation' value={dictionary.translation} /> <span onClick={save}>Сохранить</span></td>
         </tr>
       </tfoot>
     </table>
@@ -50,7 +48,7 @@ const mapStateToProps = (state, { moduleName }) => {
   const module = state.modules.data[moduleName]
   return {
     words: !module ? [] : module.messages.map(message => ({ ...message, translation: module[lang][message.id] })),
-    ...state.dictionary,
+    dictionary: state.dictionary,
     moduleName
   }
 }

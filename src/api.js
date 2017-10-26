@@ -12,22 +12,27 @@ const apiInterface = {
 }
 
 const api = Object.create(apiInterface)
+const postHeaders = {
+  'Accept': 'application/json',
+  'Content-Type': 'application/json;charset=UTF-8'
+}
 
 api.addModule = function (payload) {
   return window.fetch(this.url + '/api/addModule', {
     body: JSON.stringify(payload),
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json;charset=UTF-8'
-    },
+    headers: postHeaders,
     method: 'POST',
     mode: 'cors'
   })
 }
 
-api.addWord = async (request, reply) => {
-  reply.type('application/json').code(200)
-  return { hello: 'addWord' }
+api.addWord = function (payload) {
+  return window.fetch(this.url + '/api/addWord', {
+    body: JSON.stringify(payload),
+    headers: postHeaders,
+    method: 'POST',
+    mode: 'cors'
+  })
 }
 
 api.loadAllDictionaries = function () {
