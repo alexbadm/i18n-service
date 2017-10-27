@@ -4,11 +4,9 @@ const path = require('path')
 const { Client } = require('pg')
 const fastify = require('fastify')()
 const fastifyStatic = require('fastify-static')
-fastify.use(require('cors')())
+fastify.use(require('cors')({ origin: process.env.ALLOW_ORIGIN }))
 
 const client = new Client()
-// const origin = process.env.ALLOW_ORIGIN
-
 client.connect().then(() => console.log('pg database connected')).catch(e => {
   console.log('unable to start server:', e.message)
   process.exit(1)
