@@ -2,6 +2,7 @@ import {
   ADD_WORD_REQUEST,
   ADD_WORD_SUCCESS,
   ADD_WORD_FAILURE,
+  SEARCH,
   SET_WORD
 } from '../types/dictionary'
 
@@ -11,6 +12,7 @@ const dictionary = (state, { type, payload }) => {
       loading: false,
       moduleName: '',
       key: '',
+      search: '',
       translation: ''
     }
   }
@@ -32,6 +34,12 @@ const dictionary = (state, { type, payload }) => {
       return {
         loading: false,
         ...state
+      }
+
+    case SEARCH:
+      return {
+        ...state,
+        search: payload
       }
 
     case SET_WORD:

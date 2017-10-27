@@ -34,8 +34,9 @@ button.Button.accent {
 }
 
 button.Button:disabled {
-  background-color: #C4C4C4;
-  color: #9B9B9B;
+  background-color: #EEE;
+  color: #BBB;
+  cursor: default;
 }
 
 button.Button.large {
