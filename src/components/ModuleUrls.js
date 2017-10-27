@@ -4,9 +4,9 @@ import { connect } from 'react-redux'
 
 const ModuleUrls = ({ languages, moduleName, url }) => (<div>
   <h2>URL для загрузки сообщений</h2>
-  <p>{`GET ${url}/${moduleName}`}</p>
+  <p>{`GET ${url}/api/${moduleName}`}</p>
   <h2>URL для загрузки переводов</h2>
-  {languages.map((lang, idx) => <p key={idx}>{`GET ${url}/${moduleName}/${lang}`}</p>)}
+  {languages.map((lang, idx) => <p key={idx}>{`GET ${url}/api/${moduleName}/${lang}`}</p>)}
 </div>)
 
 ModuleUrls.propTypes = {
