@@ -51,7 +51,7 @@ function api (dbClient, languages) {
         result[message.modulename] = { messages: [] }
         languages.forEach(lang => { result[message.modulename][lang] = {} })
       }
-      if (message.id && message.key) result[message.modulename].messages.push({ id: message.id, key: message.key })
+      if (message.id && message.key) result[message.modulename].messages.push({ id: message.id + '', key: message.key })
       return result
     }, {})
 
