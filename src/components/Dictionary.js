@@ -46,6 +46,8 @@ const Dictionary = ({ dictionary, moduleName, onChangeInput, onSearchInput, save
       <tbody>
         {words && words.filter(word => {
           return word.key.toLowerCase().indexOf(srch) !== -1 || word.translation.toLowerCase().indexOf(srch) !== -1
+        }).sort((a, b) => {
+          return a.key > b.key
         }).map((word, idx) => (<tr key={idx}>
           <td>{word.key}</td>
           <td>{word.translation} <span onClick={edit(word)}><EditIcon /></span></td>
